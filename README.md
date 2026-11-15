@@ -21,12 +21,13 @@ Design decisions and trade-offs are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.
 │   ├── js/config.js           switch between static mode and backend mode
 │   ├── js/icons.js
 │   ├── data/content.json      ← edit projects, skills and certificates here
-│   └── assets/                hero-clouds.jpg and profile.jpg go here
+│   └── assets/                photos and the downloadable CV (cv-amine-mokhtar.pdf)
 ├── backend/
 │   ├── server.js              the API (also serves the frontend for local use)
 │   ├── test/api.test.js
 │   ├── Dockerfile
 │   └── .env.example
+├── cv/cv_amine_mokhtar.tex    LaTeX source of the CV
 ├── scripts/fetch-assets.mjs   copies your two photos from the Lovable site
 ├── .github/workflows/deploy-pages.yml
 ├── docker-compose.yml
@@ -152,7 +153,36 @@ Each entry in `certificates` looks like this:
 To add a certificate, copy an entry and change the values. To add a project, do the same in
 `projects` (`"status"` is `"completed"` or `"in-progress"`).
 
-## 6. Tests
+## 6. Site features and their settings
+
+All switches are in `frontend/js/config.js`.
+
+**Dark mode.** The moon/sun button in the navigation switches themes and remembers the
+choice. First-time visitors get the theme their system uses. Colours for both themes are the
+variables at the top of `frontend/css/styles.css`.
+
+**Downloadable CV.** The "Download CV" buttons serve `frontend/assets/cv-amine-mokhtar.pdf`.
+To update it, edit `cv/cv_amine_mokhtar.tex`, run `pdflatex cv_amine_mokhtar.tex` in the
+`cv/` folder, and copy the PDF over the one in `frontend/assets/`. The path is
+`profile.cvUrl` in `content.json`; remove it to hide the buttons.
+
+**Contact form.** The form posts to [FormSubmit](https://formsubmit.co), which forwards the
+message to the address in `contactEndpoint`. One-time setup: send yourself a first message
+from the live site, then click **Activate Form** in the email FormSubmit sends to that
+address. After activation, FormSubmit gives you a random alias you can use in
+`contactEndpoint` instead of your address. If delivery fails, the form opens the visitor's
+email app with the message filled in. Set `contactEndpoint: ""` to always do that.
+
+**Visitor analytics.** Off until you set `goatcounterCode`. Create a free site at
+<https://www.goatcounter.com/signup>, pick a code (for example `amine-mokhtar`), and put it
+in `config.js`. GoatCounter uses no cookies; visitors with Do Not Track enabled and visits
+on localhost are not counted. Your dashboard is at `https://<code>.goatcounter.com`.
+
+**Motion.** The drifting clouds are defined by the `CLOUDS` list in `frontend/js/main.js`
+(position, size, speed, opacity). All animation is disabled for visitors whose system asks
+for reduced motion.
+
+## 7. Tests
 
 ```bash
 cd backend

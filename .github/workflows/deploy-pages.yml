@@ -67,14 +67,15 @@ jobs:
           API_BASE_URL: ${{ vars.API_BASE_URL }}
         run: |
           node -e '
+            const fs = require("fs");
+            const file = "frontend/js/config.js";
             const base = process.env.API_BASE_URL.replace(/\/+$/, "");
-            const config = { useApi: true, apiBase: base };
-            require("fs").writeFileSync(
-              "frontend/js/config.js",
-              "export const CONFIG = " + JSON.stringify(config, null, 2) + ";\n"
-            );
+            const text = fs.readFileSync(file, "utf8")
+              .replace(/useApi:\s*false/, "useApi: true")
+              .replace(/apiBase:\s*"[^"]*"/, "apiBase: " + JSON.stringify(base));
+            fs.writeFileSync(file, text);
           '
-          cat frontend/js/config.js
+          grep -nE "useApi|apiBase" frontend/js/config.js
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4

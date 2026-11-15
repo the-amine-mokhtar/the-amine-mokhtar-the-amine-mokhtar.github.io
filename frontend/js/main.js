@@ -1,3 +1,4 @@
+import { CONFIG } from "./config.js";
 import { STRINGS } from "./i18n.js";
 import { icon } from "./icons.js";
 import { loadContent, loadGithub } from "./api.js";
@@ -27,6 +28,8 @@ const state = {
   github: { status: "loading", user: null, repos: [] },
   query: "",
   showAllRepos: false,
+  theme: document.documentElement.dataset.theme === "dark" ? "dark" : "light",
+  form: { name: "", email: "", message: "", status: "idle" }, // idle | sending | success | fallback
   heroImageOk: true,
   avatarSrc: "assets/profile.jpg",
 };
@@ -41,9 +44,9 @@ function readStoredLang() {
   }
 }
 
-function storeLang(lang) {
+function store(key, value) {
   try {
-    localStorage.setItem("lang", lang);
+    localStorage.setItem(key, value);
   } catch {
     /* storage unavailable (private mode): the choice just isn't remembered */
   }
@@ -100,12 +103,48 @@ function renderNav() {
           <div class="lang-toggle">
             ${langButton("en", "English")}${langButton("fr", "Français")}
           </div>
+          <button type="button" class="theme-toggle" data-action="toggle-theme"
+            aria-label="${esc(state.theme === "dark" ? t().theme.toLight : t().theme.toDark)}">
+            ${icon(state.theme === "dark" ? "sun" : "moon", 18)}
+          </button>
           <a href="${esc(profile.githubUrl)}" ${external} aria-label="GitHub">${icon("github", 18)}</a>
           <a href="${esc(profile.linkedinUrl)}" ${external} aria-label="LinkedIn">${icon("linkedin", 18)}</a>
           <a href="mailto:${esc(profile.email)}" aria-label="Email">${icon("mail", 18)}</a>
         </div>
       </div>
     </nav>`;
+}
+
+// Drifting clouds. "back" clouds pass behind the text, "front" ones glide over it.
+// Each entry: vertical position, width, seconds to cross the screen, start offset, opacity.
+const CLOUDS = {
+  back: [
+    { y: "12%", w: "34rem", t: 95, s: 0.1, o: 0.9 },
+    { y: "38%", w: "26rem", t: 70, s: 0.55, o: 0.75 },
+    { y: "62%", w: "40rem", t: 120, s: 0.35, o: 0.85 },
+    { y: "80%", w: "30rem", t: 85, s: 0.8, o: 0.8 },
+  ],
+  front: [
+    { y: "30%", w: "30rem", t: 60, s: 0.25, o: 0.38 },
+    { y: "56%", w: "38rem", t: 80, s: 0.7, o: 0.34 },
+    { y: "6%", w: "22rem", t: 50, s: 0.9, o: 0.42 },
+  ],
+};
+
+function renderClouds(layer) {
+  const clouds = CLOUDS[layer]
+    .map(
+      (c) =>
+        `<span class="cloud" style="--y:${c.y};--w:${c.w};--t:${c.t}s;--delay:${(-c.t * c.s).toFixed(1)}s;--o:${c.o};--x:${Math.round(c.s * 100)}vw"></span>`
+    )
+    .join("");
+  return `<div class="clouds clouds-${layer}" aria-hidden="true">${clouds}</div>`;
+}
+
+function renderCvButton() {
+  const { profile } = state.content;
+  if (!profile.cvUrl) return "";
+  return `<a href="${esc(profile.cvUrl)}" download class="btn btn-outline">${icon("download", 16)} ${esc(t().hero.cv)}</a>`;
 }
 
 function renderHero() {
@@ -117,6 +156,7 @@ function renderHero() {
         ${state.heroImageOk ? '<img id="hero-image" src="assets/hero-clouds.jpg" alt="" width="1920" height="1080">' : ""}
         <div class="hero-overlay"></div>
       </div>
+      ${renderClouds("back")}
       <div class="hero-content">
         <div class="hero-avatar enter enter-scale" style="--d:.15s">
           <span class="avatar-ring">
@@ -130,11 +170,13 @@ function renderHero() {
           <a href="#projects" class="btn btn-primary">${esc(h.cta)}</a>
           <a href="${esc(profile.githubUrl)}" ${external} class="btn btn-outline">${icon("github", 16)} GitHub</a>
           <a href="${esc(profile.linkedinUrl)}" ${external} class="btn btn-outline">${icon("linkedin", 16)} LinkedIn</a>
+          ${renderCvButton()}
         </div>
         <div class="hero-arrow enter enter-fade" style="--d:1.2s">
           <a href="#projects" aria-label="${esc(h.cta)}">${icon("arrow-down", 24)}</a>
         </div>
       </div>
+      ${renderClouds("front")}
     </section>`;
 }
 
@@ -351,6 +393,116 @@ function renderCertificates() {
     </section>`;
 }
 
+function renderContactForm() {
+  const f = t().contact.form;
+  const { name, email, message, status } = state.form;
+  const sending = status === "sending";
+  const statusText = status === "success" ? f.success : status === "fallback" ? f.fallback : "";
+  return `
+    <form id="contact-form" class="card contact-form" novalidate>
+      <div class="form-row">
+        <label class="field">
+          <span>${esc(f.name)}</span>
+          <input name="name" type="text" required maxlength="100" autocomplete="name" value="${esc(name)}" placeholder="${esc(f.namePlaceholder)}">
+        </label>
+        <label class="field">
+          <span>${esc(f.email)}</span>
+          <input name="email" type="email" required maxlength="200" autocomplete="email" value="${esc(email)}" placeholder="${esc(f.emailPlaceholder)}">
+        </label>
+      </div>
+      <label class="field">
+        <span>${esc(f.message)}</span>
+        <textarea name="message" required rows="5" maxlength="4000" placeholder="${esc(f.messagePlaceholder)}">${esc(message)}</textarea>
+      </label>
+      <!-- Hidden from people; bots that fill it in are ignored. -->
+      <input class="form-trap" name="_honey" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="form-footer">
+        <button type="submit" class="btn btn-primary"${sending ? " disabled" : ""}>${icon("send", 16)} ${esc(sending ? f.sending : f.send)}</button>
+        <p class="form-status${status === "success" ? " is-success" : ""}" role="status" aria-live="polite">${esc(statusText)}</p>
+      </div>
+      ${CONFIG.contactEndpoint ? `<p class="form-note">${esc(f.note)}</p>` : ""}
+    </form>`;
+}
+
+/** Re-renders just the form (keeps focus elsewhere on the page untouched). */
+function refreshContactForm() {
+  const form = document.getElementById("contact-form");
+  if (form) form.outerHTML = renderContactForm();
+}
+
+async function submitContactForm(form) {
+  if (state.form.status === "sending") return;
+  if (!form.reportValidity()) return;
+  const data = new FormData(form);
+  const name = String(data.get("name")).trim();
+  const email = String(data.get("email")).trim();
+  const message = String(data.get("message")).trim();
+  const f = t().contact.form;
+
+  // A filled trap field means a bot: act as if it worked and send nothing.
+  if (data.get("_honey")) {
+    state.form = { name: "", email: "", message: "", status: "success" };
+    refreshContactForm();
+    return;
+  }
+
+  state.form = { name, email, message, status: "sending" };
+  refreshContactForm();
+
+  let delivered = false;
+  if (CONFIG.contactEndpoint) {
+    try {
+      const res = await fetch(CONFIG.contactEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ name, email, message, _subject: f.subject(name), _template: "table", _captcha: "false" }),
+        signal: AbortSignal.timeout(15000),
+      });
+      const body = await res.json().catch(() => ({}));
+      delivered = res.ok && String(body.success) !== "false";
+    } catch (err) {
+      console.warn("Contact form delivery failed.", err);
+    }
+  }
+
+  if (delivered) {
+    state.form = { name: "", email: "", message: "", status: "success" };
+  } else {
+    // No form service, or it failed: hand the message to the visitor's email app.
+    const { profile } = state.content;
+    const body = `${message}\n\n${name}\n${email}`;
+    window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(f.subject(name))}&body=${encodeURIComponent(body)}`;
+    state.form = { name, email, message, status: "fallback" };
+  }
+  refreshContactForm();
+}
+
+function toggleTheme() {
+  state.theme = state.theme === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = state.theme;
+  store("theme", state.theme);
+  const button = app.querySelector(".theme-toggle");
+  if (!button) return;
+  button.innerHTML = icon(state.theme === "dark" ? "sun" : "moon", 18);
+  button.setAttribute("aria-label", state.theme === "dark" ? t().theme.toLight : t().theme.toDark);
+  button.classList.remove("is-spinning");
+  void button.offsetWidth; // restart the icon animation
+  button.classList.add("is-spinning");
+}
+
+/** Cookie-free visitor counting, only when a GoatCounter code is configured. */
+function loadAnalytics() {
+  const code = (CONFIG.goatcounterCode || "").trim();
+  if (!/^[a-z0-9-]+$/i.test(code)) return;
+  if (navigator.doNotTrack === "1" || window.doNotTrack === "1") return;
+  if (["localhost", "127.0.0.1"].includes(location.hostname)) return;
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = "https://gc.zgo.at/count.js";
+  script.dataset.goatcounter = `https://${code}.goatcounter.com/count`;
+  document.head.appendChild(script);
+}
+
 function renderContact() {
   const c = t().contact;
   const { profile } = state.content;
@@ -361,10 +513,12 @@ function renderContact() {
           <p class="eyebrow">${esc(c.eyebrow)}</p>
           <h2 class="section-title mb-6">${esc(c.titleA)} <span class="text-gradient">${esc(c.titleB)}</span></h2>
           <p class="contact-body">${esc(c.body)}</p>
+          ${renderContactForm()}
           <div class="button-row">
             <a href="mailto:${esc(profile.email)}" class="btn btn-primary">${icon("mail", 16)} ${esc(c.cta)}</a>
             <a href="${esc(profile.githubUrl)}" ${external} class="btn btn-outline">${icon("github", 16)} GitHub</a>
             <a href="${esc(profile.linkedinUrl)}" ${external} class="btn btn-outline">${icon("linkedin", 16)} LinkedIn</a>
+            ${renderCvButton()}
           </div>
         </div>
         <footer class="footer reveal reveal-fade">
@@ -523,7 +677,7 @@ app.addEventListener("click", (event) => {
     const lang = langButton.dataset.lang;
     if (lang !== state.lang) {
       state.lang = lang;
-      storeLang(lang);
+      store("lang", lang);
       render();
     }
     return;
@@ -531,10 +685,25 @@ app.addEventListener("click", (event) => {
   if (event.target.closest('[data-action="toggle-repos"]')) {
     state.showAllRepos = !state.showAllRepos;
     renderGithubData();
+    return;
   }
+  if (event.target.closest('[data-action="toggle-theme"]')) toggleTheme();
+});
+
+app.addEventListener("submit", (event) => {
+  if (event.target.id !== "contact-form") return;
+  event.preventDefault();
+  submitContactForm(event.target);
 });
 
 app.addEventListener("input", (event) => {
+  const field = event.target;
+  // Keep what the visitor typed, so a language switch doesn't wipe the form.
+  if (field.form?.id === "contact-form" && field.name in state.form) {
+    state.form[field.name] = field.value;
+    if (state.form.status !== "sending") state.form.status = "idle";
+    return;
+  }
   if (event.target.id !== "repo-search") return;
   state.query = event.target.value;
   renderGithubData();
@@ -550,6 +719,7 @@ async function start() {
     return;
   }
   render({ animate: true });
+  loadAnalytics();
 
   try {
     const { user, repos } = await loadGithub(state.content.profile.github);

@@ -109,12 +109,13 @@ frontend falls back to calling GitHub directly.
 | Zero-dependency Node backend instead of Spring Boot | Starts instantly on free tiers, tiny image, no supply chain to patch | Routing and static serving are hand-written (covered by tests) |
 | Content in a JSON file instead of a database | Versioned, free, no migrations | Editing means a commit, not a form |
 | Content rendered by JavaScript | One template for both languages and both data sources | Search engines that do not run JavaScript see only the page title and description |
-| Mailto contact instead of a form | Same as the original; no spam handling, no stored personal data | No message history |
+| Contact form through a form-forwarding service (FormSubmit), with a mailto fallback | Works on static hosting without running the backend; nothing is stored by this project | Depends on a third party; needs a one-time activation |
+| Analytics through GoatCounter, off by default | Cookie-free, so no consent banner; nothing loads until a site code is configured | Third-party script; blocked by some ad blockers |
 
 ## 6. What to revisit as it grows
 
-- **Contact form:** add `POST /api/contact` with rate limiting and a mail provider; this is
-  the first feature that genuinely needs the backend.
+- **Contact form:** move delivery to `POST /api/contact` on the backend (rate limiting plus a
+  mail provider) to drop the third-party form service.
 - **Many more projects or a blog:** move to a static site generator or a framework with
   pre-rendering so content is in the HTML for search engines.
 - **Frequent content edits by non-developers:** put a headless CMS or an authenticated admin

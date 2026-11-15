@@ -9,20 +9,33 @@
     "tagline": {
       "en": "Cloud Engineering Student | Building Full-Stack Applications, Cloud Platforms & DevOps Pipelines",
       "fr": "Étudiant en Cloud Engineering | Conception d'applications full-stack, de plateformes cloud et de pipelines DevOps"
-    }
+    },
+    "cvUrl": "assets/cv-amine-mokhtar.pdf"
   },
   "projects": [
     {
       "id": "clubverse",
       "icon": "cloud",
-      "title": { "en": "ClubVerse", "fr": "ClubVerse" },
+      "title": {
+        "en": "ClubVerse",
+        "fr": "ClubVerse"
+      },
       "status": "completed",
-      "period": { "en": "2025–2026", "fr": "2025–2026" },
+      "period": {
+        "en": "2025–2026",
+        "fr": "2025–2026"
+      },
       "description": {
         "en": "A cloud-based platform built on OpenStack with container orchestration using Kubernetes and Docker, featuring an Angular frontend façade and Spring Boot backend services.",
         "fr": "Une plateforme cloud basée sur OpenStack avec orchestration de conteneurs via Kubernetes et Docker, dotée d'une façade Angular et de services back-end Spring Boot."
       },
-      "tags": ["OpenStack", "Kubernetes", "Docker", "Spring Boot", "Angular"],
+      "tags": [
+        "OpenStack",
+        "Kubernetes",
+        "Docker",
+        "Spring Boot",
+        "Angular"
+      ],
       "repoUrl": ""
     },
     {
@@ -33,77 +46,168 @@
         "fr": "Infrastructure DevOps Auto-réparatrice"
       },
       "status": "completed",
-      "period": { "en": "Summer 2026", "fr": "Été 2026" },
+      "period": {
+        "en": "Summer 2026",
+        "fr": "Été 2026"
+      },
       "description": {
         "en": "A fully self-hosted DevOps platform that detects and automatically recovers from infrastructure and application failures — with zero manual intervention. Provisioned a 4-VM environment on VMware ESXi, deployed a Spring Boot, Angular and MySQL application on a lightweight Kubernetes cluster, and built a complete CI/CD pipeline with automatic rollback on failed deployments. Monitoring with Prometheus, Grafana, and Alertmanager feeds a custom Python remediation webhook that automatically restarts unhealthy deployments and logs every action for audit. Validated through deliberate chaos testing — pod crashes, node failures, CPU-triggered autoscaling, broken deployments, and full VM outages — all of which recovered automatically.",
         "fr": "Une plateforme DevOps entièrement auto-hébergée qui détecte les pannes d'infrastructure et d'application et s'en rétablit automatiquement — sans aucune intervention manuelle. Mise en place d'un environnement de 4 machines virtuelles sur VMware ESXi, déploiement d'une application Spring Boot, Angular et MySQL sur un cluster Kubernetes léger, et création d'un pipeline CI/CD complet avec rollback automatique en cas d'échec de déploiement. La supervision avec Prometheus, Grafana et Alertmanager alimente un webhook de remédiation développé en Python qui redémarre automatiquement les déploiements défaillants et journalise chaque action à des fins d'audit. Validée par des tests de chaos délibérés — crashs de pods, pannes de nœuds, autoscaling déclenché par le CPU, déploiements cassés et coupures complètes de machines virtuelles — tous récupérés automatiquement."
       },
       "tags": [
-        "VMware ESXi", "Kubernetes", "Docker", "Ansible", "Gitea Actions", "Spring Boot",
-        "Angular", "MySQL", "Prometheus", "Grafana", "Alertmanager", "Python"
+        "VMware ESXi",
+        "Kubernetes",
+        "Docker",
+        "Ansible",
+        "Gitea Actions",
+        "Spring Boot",
+        "Angular",
+        "MySQL",
+        "Prometheus",
+        "Grafana",
+        "Alertmanager",
+        "Python"
       ],
       "repoUrl": "https://github.com/the-amine-mokhtar/devops-selfhealing-infrastructure-.git"
     },
     {
       "id": "ml",
       "icon": "brain",
-      "title": { "en": "Machine Learning Pipeline", "fr": "Pipeline de Machine Learning" },
+      "title": {
+        "en": "Machine Learning Pipeline",
+        "fr": "Pipeline de Machine Learning"
+      },
       "status": "completed",
-      "period": { "en": "2025", "fr": "2025" },
+      "period": {
+        "en": "2025",
+        "fr": "2025"
+      },
       "description": {
         "en": "An ML project combining multiple algorithms for data analysis and prediction. Explored and benchmarked various approaches to solve classification and regression problems.",
         "fr": "Un projet de machine learning combinant plusieurs algorithmes pour l'analyse et la prédiction de données. Exploration et comparaison de différentes approches pour résoudre des problèmes de classification et de régression."
       },
-      "tags": ["Python", "Scikit-learn", "TensorFlow", "Pandas", "NumPy"],
+      "tags": [
+        "Python",
+        "Scikit-learn",
+        "TensorFlow",
+        "Pandas",
+        "NumPy"
+      ],
       "repoUrl": ""
     },
     {
       "id": "matchupz",
       "icon": "dumbbell",
-      "title": { "en": "MatchUpz", "fr": "MatchUpz" },
+      "title": {
+        "en": "MatchUpz",
+        "fr": "MatchUpz"
+      },
       "status": "completed",
-      "period": { "en": "2024", "fr": "2024" },
+      "period": {
+        "en": "2024",
+        "fr": "2024"
+      },
       "description": {
         "en": "A hybrid sports club management platform (JavaFX + Web) that empowers clubs to manage players, equipment, spaces, and match schedules in one smart system. Powered by AI with real-time player tracking, an intelligent formation builder suggesting optimal lineups, and predictive insights for performance. I developed the \"Player\" entity—designing the entire player data system from structuring profiles to integrating real-time stats and connecting it with AI modules.",
         "fr": "Une plateforme hybride de gestion de clubs sportifs (JavaFX + Web) permettant de gérer les joueurs, les équipements, les espaces et les calendriers de matchs dans un seul système intelligent. Propulsée par l'IA : suivi des joueurs en temps réel, générateur de compositions intelligent proposant les meilleures formations, et analyses prédictives de performance. J'ai développé l'entité « Joueur » — conception complète du système de données joueurs, de la structuration des profils à l'intégration des statistiques en temps réel et à la connexion avec les modules d'IA."
       },
-      "tags": ["JavaFX", "Symfony", "PHP", "MySQL", "AI/ML"],
+      "tags": [
+        "JavaFX",
+        "Symfony",
+        "PHP",
+        "MySQL",
+        "AI/ML"
+      ],
       "repoUrl": "https://github.com/hazemmrad17/matchupz-web.git"
     }
   ],
   "skills": [
     {
       "key": "languages",
-      "title": { "en": "Languages", "fr": "Langages" },
-      "items": ["Java", "Python", "PHP", "TypeScript", "JavaScript", "SQL", "C", "C++", "C#"]
+      "title": {
+        "en": "Languages",
+        "fr": "Langages"
+      },
+      "items": [
+        "Java",
+        "Python",
+        "PHP",
+        "TypeScript",
+        "JavaScript",
+        "SQL",
+        "C",
+        "C++",
+        "C#"
+      ]
     },
     {
       "key": "frameworks",
-      "title": { "en": "Frameworks", "fr": "Frameworks" },
-      "items": ["Spring Boot", "Angular", "Symfony", "React", ".NET", "Flask"]
+      "title": {
+        "en": "Frameworks",
+        "fr": "Frameworks"
+      },
+      "items": [
+        "Spring Boot",
+        "Angular",
+        "Symfony",
+        "React",
+        ".NET",
+        "Flask"
+      ]
     },
     {
       "key": "cloud",
-      "title": { "en": "Cloud & DevOps", "fr": "Cloud & DevOps" },
+      "title": {
+        "en": "Cloud & DevOps",
+        "fr": "Cloud & DevOps"
+      },
       "items": [
-        "OpenStack", "Kubernetes", "Docker", "Terraform", "VMware ESXi", "Ansible", "CI/CD",
-        "Gitea Actions", "Linux"
+        "OpenStack",
+        "Kubernetes",
+        "Docker",
+        "Terraform",
+        "VMware ESXi",
+        "Ansible",
+        "CI/CD",
+        "Gitea Actions",
+        "Linux"
       ]
     },
     {
       "key": "monitoring",
-      "title": { "en": "Monitoring", "fr": "Supervision" },
-      "items": ["Prometheus", "Grafana", "Alertmanager"]
+      "title": {
+        "en": "Monitoring",
+        "fr": "Supervision"
+      },
+      "items": [
+        "Prometheus",
+        "Grafana",
+        "Alertmanager"
+      ]
     },
     {
       "key": "ml",
-      "title": { "en": "ML & Data", "fr": "ML & Données" },
-      "items": ["Scikit-learn", "TensorFlow", "Pandas", "NumPy"]
+      "title": {
+        "en": "ML & Data",
+        "fr": "ML & Données"
+      },
+      "items": [
+        "Scikit-learn",
+        "TensorFlow",
+        "Pandas",
+        "NumPy"
+      ]
     },
     {
       "key": "databases",
-      "title": { "en": "Databases", "fr": "Bases de données" },
-      "items": ["MySQL", "PLSQL"]
+      "title": {
+        "en": "Databases",
+        "fr": "Bases de données"
+      },
+      "items": [
+        "MySQL",
+        "PLSQL"
+      ]
     }
   ],
   "certificates": [
@@ -112,30 +216,55 @@
       "icon": "cloud",
       "title": "AWS Academy Graduate - Cloud Operations - Training Badge",
       "issuer": "Amazon Web Services Training and Certification",
-      "type": { "en": "Training Badge", "fr": "Badge de formation" },
-      "date": "",
-      "credentialUrl": "",
-      "tags": ["AWS", "Cloud Operations"]
+      "type": {
+        "en": "Training Badge",
+        "fr": "Badge de formation"
+      },
+      "date": {
+        "en": "Oct 28, 2026",
+        "fr": "28 oct. 2026"
+      },
+      "credentialUrl": "https://www.credly.com/badges/01695568-d031-4853-ba78-202626dd0f25/public_url",
+      "tags": [
+        "AWS",
+        "Cloud Operations"
+      ]
     },
     {
       "id": "aws-cloud-security-foundations",
       "icon": "shield-check",
       "title": "AWS Academy Graduate - Cloud Security Foundations - Training Badge",
       "issuer": "Amazon Web Services Training and Certification",
-      "type": { "en": "Training Badge", "fr": "Badge de formation" },
-      "date": "",
-      "credentialUrl": "",
-      "tags": ["AWS", "Cloud Security"]
+      "type": {
+        "en": "Training Badge",
+        "fr": "Badge de formation"
+      },
+      "date": {
+        "en": "Nov 13, 2026",
+        "fr": "13 nov. 2026"
+      },
+      "credentialUrl": "https://www.credly.com/badges/703f6754-2379-41f8-a2a4-a56140597f36",
+      "tags": [
+        "AWS",
+        "Cloud Security"
+      ]
     },
     {
       "id": "nvidia-rag-agents",
       "icon": "bot",
       "title": "Building RAG Agents with LLMs",
       "issuer": "NVIDIA Deep Learning Institute",
-      "type": { "en": "Certificate", "fr": "Certificat" },
+      "type": {
+        "en": "Certificate",
+        "fr": "Certificat"
+      },
       "date": "",
-      "credentialUrl": "",
-      "tags": ["RAG", "LLMs", "AI Agents"]
+      "credentialUrl": "https://learn.nvidia.com/certificates?j2Df5LzUQ5SHZbV4YqnMKg",
+      "tags": [
+        "RAG",
+        "LLMs",
+        "AI Agents"
+      ]
     }
   ]
 }

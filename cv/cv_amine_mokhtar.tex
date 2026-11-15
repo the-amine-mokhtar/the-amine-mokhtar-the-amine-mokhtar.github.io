@@ -1,0 +1,115 @@
+% CV — Amine Mokhtar. Build with:  pdflatex cv_amine_mokhtar.tex
+\documentclass[10pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+% Optional, if your TeX installation has French support:
+% \usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage[a4paper,top=1.25cm,bottom=1.2cm,left=1.4cm,right=1.4cm]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\hypersetup{
+  pdftitle={CV - Amine Mokhtar},
+  pdfauthor={Amine Mokhtar},
+  pdfsubject={Élève ingénieur Cloud \& DevOps}
+}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\tabcolsep}{0pt}
+\raggedbottom
+
+% Section titles: bold black capitals with a thin rule, no colour.
+\titleformat{\section}{\large\bfseries}{}{0pt}{\MakeUppercase}[\titlerule]
+\titlespacing*{\section}{0pt}{7pt}{5pt}
+
+\setlist[itemize]{leftmargin=1.2em,itemsep=0.5pt,topsep=2pt,parsep=0pt,partopsep=0pt,label=\textbullet}
+
+% \entry{title}{dates}{organisation}{place}
+\newcommand{\entry}[4]{%
+  \textbf{#1}\hfill #2\par
+  \textit{#3}\hfill \textit{#4}\par}
+% \project{title}{stack}
+\newcommand{\project}[2]{\textbf{#1} \textbar{} \textit{#2}\par}
+\newcommand{\skill}[2]{\textbf{#1 :} & #2 \\}
+
+\begin{document}
+\small
+
+\begin{center}
+  {\fontsize{21}{24}\selectfont\bfseries Amine Mokhtar}\\[4pt]
+  {\large Élève ingénieur Cloud \& DevOps}\\[4pt]
+  Tunis, Tunisie \textbar{} +216 56 623 537 \textbar{} \href{mailto:aminemokhtar2003@gmail.com}{aminemokhtar2003@gmail.com}\\[2pt]
+  \href{https://www.linkedin.com/in/amine-mokhtar-679038277/}{\textbf{LinkedIn}} \textbar{}
+  \href{https://github.com/the-amine-mokhtar}{\textbf{GitHub}} \textbar{}
+  \href{https://the-amine-mokhtar.github.io/the-amine-mokhtar-the-amine-mokhtar.github.io/}{\textbf{Portfolio}}
+\end{center}
+\vspace{-6pt}
+
+\section{Profil}
+Élève ingénieur en dernière année (Cloud \& Infrastructure) à ESPRIT, à la recherche d'un stage de fin d'études (PFE) en Cloud / DevOps. Expérience pratique en Kubernetes, Docker, Terraform, Ansible, CI/CD et observabilité, dont un stage DevOps chez EY Tunisie.
+
+\section{Expérience professionnelle}
+\entry{Stagiaire DevOps}{Juil. 2026 -- Août 2026}{EY Tunisie}{Tunis, Tunisie (hybride)}
+\begin{itemize}
+  \item Conception d'une infrastructure DevOps auto-hébergée qui détecte les défaillances et récupère sans intervention manuelle.
+  \item Provisionnement de 4 VM sur VMware ESXi (Terraform, Ansible) et déploiement d'une application Spring Boot, Angular et MySQL sur un cluster Kubernetes léger.
+  \item Mise en place d'un pipeline CI/CD GitHub Actions avec déploiement automatisé et rollback automatique en cas d'échec.
+  \item Supervision et auto-remédiation avec Prometheus, Grafana, Alertmanager et Python ; validation par tests de chaos sur 6 scénarios (crash de pods, panne de nœud, déploiement défectueux, perte complète de VM).
+\end{itemize}
+\vspace{2pt}
+\entry{Stagiaire SAP ABAP}{Août 2025 -- Sep. 2025}{SIRYOS}{Tunis, Tunisie}
+\begin{itemize}
+  \item Développement d'un Business Object de gestion des voyages et réservations avec SAP ABAP RESTful Application Programming (RAP).
+  \item Exposition des services via OData et interface utilisateur avec SAP Fiori Elements.
+\end{itemize}
+\vspace{2pt}
+\entry{Stagiaire -- Design graphique}{Juin 2023}{RHIS Software}{Tunis, Tunisie}
+
+\section{Projets}
+\project{Infrastructure DevOps Auto-Réparatrice}{VMware ESXi, Kubernetes, Docker, Ansible, Terraform, GitHub Actions, Prometheus, Grafana}
+\begin{itemize}
+  \item Plateforme entièrement auto-hébergée, provisionnée avec Terraform et configurée avec Ansible, avec remédiation et récupération pilotées par CI/CD.
+  \item Tableaux de bord Prometheus et Grafana pour l'observabilité de l'infrastructure et des applications.
+\end{itemize}
+\vspace{2pt}
+\project{CluVerse -- Plateforme SaaS de gestion de clubs étudiants}{OpenStack, Kubernetes, Docker, Ansible, Spring Boot, Angular, Prometheus, Grafana}
+\begin{itemize}
+  \item Conception et déploiement d'un cloud privé OpenStack distribué avec orchestration Kubernetes des services de la plateforme.
+  \item Automatisation du déploiement de l'infrastructure avec Ansible ; supervision de l'application avec Prometheus et Grafana.
+\end{itemize}
+\vspace{2pt}
+\project{MatchUPZ -- Analyse de performances de joueurs}{Python, NLP, SQL, Java, Symfony}
+\begin{itemize}
+  \item Application web et desktop d'analyse en temps réel des performances de joueurs, avec traitement NLP en Python.
+\end{itemize}
+
+\section{Formation}
+\entry{Diplôme d'ingénieur en Génie Informatique -- Cloud \& Infrastructure}{Sep. 2022 -- Sep. 2027}{ESPRIT -- École Supérieure Privée d'Ingénierie et de Technologie}{Ariana, Tunisie}
+
+\section{Compétences techniques}
+\begin{tabular}{@{}p{5.2cm}l@{}}
+  \skill{Cloud \& Virtualisation}{AWS, OpenStack, VMware ESXi}
+  \skill{Conteneurs \& Orchestration}{Docker, Kubernetes}
+  \skill{IaC \& CI/CD}{Terraform, Ansible, GitHub Actions, Git}
+  \skill{Supervision \& Systèmes}{Prometheus, Grafana, Alertmanager, Linux, Bash, Python}
+  \skill{Développement}{Java (Spring Boot), JavaScript (Angular, Node.js), PHP (Symfony), C\#, C++}
+  \skill{Données \& ERP}{MySQL, Oracle, SQL, PL/SQL, SAP ABAP (RAP, OData, Fiori Elements)}
+\end{tabular}
+
+\section{Certifications}
+\begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}r@{}}
+  \textbullet\hspace{0.5em}\href{https://www.credly.com/badges/01695568-d031-4853-ba78-202626dd0f25/public_url}{AWS Cloud Operations -- Badge numérique (AWS)} &
+  \href{https://www.credly.com/badges/703f6754-2379-41f8-a2a4-a56140597f36}{AWS Security Foundations -- Badge numérique (AWS)} \\
+  \textbullet\hspace{0.5em}\href{https://learn.nvidia.com/certificates?j2Df5LzUQ5SHZbV4YqnMKg}{Building RAG Agents with LLMs -- NVIDIA} &
+  \href{https://www.efset.org/cert/kRLCmo}{EF SET English Certificate -- 75/100 (C2)} \\
+\end{tabular*}
+
+\section{Langues \& activités}
+\textbf{Langues :} Arabe (natif), Français (B2), Anglais (C2 -- EF SET)\par
+\textbf{Associatif :} IEEE Student Branch ESPRIT, Lions Club Tunis Esprit, Deepflow AI Club
+
+\end{document}

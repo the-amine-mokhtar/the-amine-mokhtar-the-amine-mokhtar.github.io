@@ -14,6 +14,18 @@
     <meta name="twitter:title" content="Amine Mokhtar | Cloud Engineer Portfolio">
     <meta name="twitter:description" content="Portfolio of Amine Mokhtar — Cloud Engineering Student specializing in full-stack development, cloud platforms, and machine learning.">
 
+    <meta name="color-scheme" content="light dark">
+    <script>
+      // Apply the saved (or system) theme before the first paint to avoid a flash.
+      (function () {
+        var theme = null;
+        try { theme = localStorage.getItem("theme"); } catch (e) {}
+        if (theme !== "dark" && theme !== "light") {
+          theme = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
