@@ -1,0 +1,17 @@
+# Optional Render blueprint for the backend (https://render.com).
+# In Render: New > Blueprint > pick this repository.
+services:
+  - type: web
+    name: amine-portfolio-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: ALLOWED_ORIGINS
+        value: https://the-amine-mokhtar.github.io
+      - key: GITHUB_USERNAME
+        value: the-amine-mokhtar
+      - key: GITHUB_TOKEN
+        sync: false

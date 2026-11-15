@@ -1,0 +1,16 @@
+# Runs the whole site (API + frontend) in one container:
+#   docker compose up --build
+# then open http://localhost:8080
+services:
+  portfolio:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ALLOWED_ORIGINS: "*"
+      GITHUB_USERNAME: the-amine-mokhtar
+      # Optional, read from your shell or a local .env file (never commit it):
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    restart: unless-stopped
