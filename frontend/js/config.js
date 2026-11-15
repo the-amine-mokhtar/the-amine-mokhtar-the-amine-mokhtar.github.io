@@ -17,11 +17,11 @@ export const CONFIG = {
   // address: click the link in it once and the form is live. FormSubmit then
   // gives you a random alias you can paste here instead of the address.
   // Leave "" to make the form open the visitor's email app instead.
-  contactEndpoint: "https://formsubmit.co/ajax/Amine.Mokhtar@esprit.tn",
+  contactEndpoint: "https://formsubmit.co/ajax/aminemokhtar2003@gmail.com",
 
   // --- Visitor analytics --------------------------------------------------
   // Your GoatCounter site code (the "mycode" part of mycode.goatcounter.com).
   // GoatCounter sets no cookies and stores no personal data. Leave "" to
   // load no analytics at all. Visitors with "Do Not Track" on are never counted.
-  goatcounterCode: "",
+  goatcounterCode: "amine-mokhtar",
 };
