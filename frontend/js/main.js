@@ -119,10 +119,12 @@ function renderHero() {
       </div>
       <div class="hero-content">
         <div class="hero-avatar enter enter-scale" style="--d:.15s">
-          <img id="avatar" src="${esc(state.avatarSrc)}" alt="${esc(profile.firstName)} ${esc(profile.lastName)}" width="160" height="160">
+          <span class="avatar-ring">
+            <img id="avatar" src="${esc(state.avatarSrc)}" alt="${esc(profile.firstName)} ${esc(profile.lastName)}" width="160" height="160">
+          </span>
         </div>
-        <p class="hero-greeting enter enter-up" style="--d:.2s">${esc(h.greeting)}</p>
-        <h1 class="hero-title enter enter-up" style="--d:.3s">${esc(profile.firstName)} <span class="text-gradient">${esc(profile.lastName)}</span></h1>
+        <p class="hero-greeting enter enter-fade" style="--d:.2s"><span class="typewriter" style="--chars:${h.greeting.length}">${esc(h.greeting)}</span></p>
+        <h1 class="hero-title enter enter-up" style="--d:.3s">${esc(profile.firstName)} <span class="text-gradient shimmer">${esc(profile.lastName)}</span></h1>
         <p class="hero-tagline enter enter-up" style="--d:.4s">${esc(pick(profile.tagline))}</p>
         <div class="button-row enter enter-up" style="--d:.5s">
           <a href="#projects" class="btn btn-primary">${esc(h.cta)}</a>
@@ -154,7 +156,7 @@ function renderProjects() {
               </div>
               <p class="project-description">${esc(pick(project.description))}</p>
               <div class="tags">
-                ${project.tags.map((tag) => `<span class="tag">${esc(tag)}</span>`).join("")}
+                ${project.tags.map((tag, i) => `<span class="tag pop" style="--i:${i}">${esc(tag)}</span>`).join("")}
                 ${repoUrl ? `<a href="${esc(repoUrl)}" ${external} class="tag-link">${icon("github", 14)} GitHub</a>` : ""}
               </div>
             </div>
@@ -306,7 +308,7 @@ function renderSkills() {
       (group, index) => `
         <div class="card skill-card reveal" style="--d:${(index * 0.1).toFixed(1)}s">
           <h3>${esc(pick(group.title))}</h3>
-          <div class="tags">${group.items.map((item) => `<span class="chip">${esc(item)}</span>`).join("")}</div>
+          <div class="tags">${group.items.map((item, i) => `<span class="chip pop" style="--i:${i}">${esc(item)}</span>`).join("")}</div>
         </div>`
     )
     .join("");
@@ -334,7 +336,7 @@ function renderCertificates() {
           </div>
           <h3>${esc(pick(cert.title))}</h3>
           <p class="cert-issuer">${icon("award", 14)} ${esc(cert.issuer)}${cert.date ? ` · ${esc(pick(cert.date))}` : ""}</p>
-          <div class="tags">${(cert.tags || []).map((tag) => `<span class="tag">${esc(tag)}</span>`).join("")}</div>
+          <div class="tags">${(cert.tags || []).map((tag, i) => `<span class="tag pop" style="--i:${i}">${esc(tag)}</span>`).join("")}</div>
           ${url ? `<a href="${esc(url)}" ${external} class="tag-link cert-link">${icon("external-link", 14)} ${esc(c.view)}</a>` : ""}
         </article>`;
     })
@@ -423,8 +425,10 @@ function bindImageFallbacks() {
 function render({ animate = false } = {}) {
   document.documentElement.lang = state.lang;
   app.classList.toggle("no-anim", !animate);
+  app.classList.toggle("swap", !animate);
   app.innerHTML = `
     <div class="page">
+      <div class="scroll-progress" aria-hidden="true"></div>
       ${renderNav()}
       ${renderHero()}
       <div class="line-accent"></div>
@@ -440,7 +444,78 @@ function render({ animate = false } = {}) {
   bindImageFallbacks();
   renderGithubData({ animate });
   if (animate) observeReveals(app);
+  setupScrollSpy();
+  updateScrollEffects();
 }
+
+/* ---------- motion helpers ---------- */
+
+let spyObserver = null;
+
+/** Highlights the nav link of the section currently in the middle of the screen. */
+function setupScrollSpy() {
+  if (spyObserver) spyObserver.disconnect();
+  if (!("IntersectionObserver" in window)) return;
+  const links = new Map(
+    [...app.querySelectorAll(".nav-links a")].map((link) => [link.getAttribute("href").slice(1), link])
+  );
+  spyObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        links.forEach((link, id) => link.classList.toggle("is-active", id === entry.target.id));
+      }
+    },
+    { rootMargin: "-45% 0px -50% 0px" }
+  );
+  app.querySelectorAll("section[id]").forEach((section) => spyObserver.observe(section));
+}
+
+let scrollQueued = false;
+
+/** Reading-progress bar and the nav shadow that appears once the page is scrolled. */
+function updateScrollEffects() {
+  scrollQueued = false;
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0;
+  document.documentElement.style.setProperty("--progress", progress.toFixed(4));
+  app.querySelector(".nav")?.classList.toggle("is-scrolled", window.scrollY > 8);
+  // Still on the hero: no section is "current" yet.
+  if (window.scrollY < window.innerHeight * 0.4) {
+    app.querySelectorAll(".nav-links a.is-active").forEach((link) => link.classList.remove("is-active"));
+  }
+}
+
+window.addEventListener(
+  "scroll",
+  () => {
+    if (scrollQueued) return;
+    scrollQueued = true;
+    requestAnimationFrame(updateScrollEffects);
+  },
+  { passive: true }
+);
+window.addEventListener("resize", updateScrollEffects, { passive: true });
+
+// Cards get a soft highlight that follows the pointer.
+app.addEventListener(
+  "pointermove",
+  (event) => {
+    if (event.pointerType === "touch") return;
+    const card = event.target.closest(".card");
+    if (!card) return;
+    const box = card.getBoundingClientRect();
+    card.style.setProperty("--mx", `${event.clientX - box.left}px`);
+    card.style.setProperty("--my", `${event.clientY - box.top}px`);
+  },
+  { passive: true }
+);
+
+// Once a reveal animation has finished, drop it so hover transitions run cleanly.
+app.addEventListener("animationend", (event) => {
+  const el = event.target;
+  if (el.classList.contains("reveal") && el.classList.contains("is-visible")) el.classList.add("is-done");
+});
 
 app.addEventListener("click", (event) => {
   const langButton = event.target.closest("[data-lang]");

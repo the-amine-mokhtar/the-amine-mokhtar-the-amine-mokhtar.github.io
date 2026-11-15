@@ -34,6 +34,7 @@
 }
 
 html {
+  scroll-padding-top: 4.5rem;
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
 }
@@ -850,6 +851,8 @@ button { background: none; cursor: pointer; padding: 0; }
 .reveal-lg.is-visible { animation-name: fade-up-lg; }
 .reveal-fade.is-visible { animation-name: fade-in; }
 
+.reveal.is-done { animation: none; }
+
 /* Re-renders (language switch, search) show everything immediately. */
 .no-anim .enter { animation: none; }
 .no-anim .reveal { opacity: 1; animation: none; }
@@ -860,4 +863,216 @@ button { background: none; cursor: pointer; padding: 0; }
   .hero-arrow a,
   .gh-skeleton { animation: none; }
   .reveal { opacity: 1; }
+}
+
+/* ==========================================================================
+   Extra motion. Everything here is switched off for visitors who ask their
+   system to reduce motion (see the media query at the end).
+   ========================================================================== */
+
+@keyframes shimmer { to { background-position: 200% center; } }
+@keyframes float { 50% { transform: translateY(-8px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes drift {
+  from { transform: scale(1.06) translate3d(-1.5%, 0, 0); }
+  to { transform: scale(1.14) translate3d(1.5%, -1.5%, 0); }
+}
+@keyframes typing { from { width: 0; } }
+@keyframes caret { 50% { border-color: transparent; } }
+@keyframes pop { from { opacity: 0; transform: translateY(6px) scale(0.92); } }
+@keyframes glow-pulse {
+  50% { box-shadow: 0 0 0 3px hsl(var(--background)), 0 18px 55px -14px hsl(191 85% 32% / 0.5); }
+}
+
+/* --- reading progress bar --- */
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: 2px;
+  background-image: linear-gradient(to right, hsl(var(--primary)), #06b6d4);
+  transform: scaleX(var(--progress, 0));
+  transform-origin: left;
+}
+
+/* --- navigation --- */
+.nav { transition: box-shadow 0.3s, background-color 0.3s; }
+.nav.is-scrolled {
+  background-color: hsl(var(--background) / 0.9);
+  box-shadow: 0 8px 30px -18px hsl(var(--foreground) / 0.35);
+}
+.nav-links a { position: relative; padding: 0.25rem 0; }
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -2px 0;
+  height: 2px;
+  border-radius: 2px;
+  background-image: linear-gradient(to right, hsl(var(--primary)), #06b6d4);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.nav-links a:hover::after,
+.nav-links a.is-active::after { transform: scaleX(1); }
+.nav-links a.is-active { color: hsl(var(--primary)); }
+.nav-actions > a { transition: color 0.15s, transform 0.2s; }
+.nav-actions > a:hover { transform: translateY(-2px); }
+.logo { transition: letter-spacing 0.3s; }
+.logo:hover { letter-spacing: 0.08em; }
+
+/* --- hero --- */
+.hero-bg img { animation: drift 40s ease-in-out infinite alternate; }
+
+.avatar-ring {
+  position: relative;
+  display: inline-flex;
+  border-radius: 9999px;
+  animation: float 6s ease-in-out infinite;
+}
+.avatar-ring::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 9999px;
+  background: conic-gradient(from 0deg, hsl(var(--primary)), #06b6d4, hsl(var(--primary) / 0.05) 55%, hsl(var(--primary)));
+  animation: spin 7s linear infinite;
+}
+.avatar-ring img {
+  position: relative;
+  box-shadow: 0 0 0 3px hsl(var(--background)), var(--glow-primary);
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+.shimmer {
+  background-image: linear-gradient(to right, hsl(var(--primary)), #06b6d4, hsl(var(--primary)));
+  background-size: 200% auto;
+  animation: shimmer 5s linear infinite;
+}
+
+.typewriter {
+  display: inline-block;
+  overflow: hidden;
+  width: calc(var(--chars) * (1ch + 0.1em) + 2px);
+  border-right: 2px solid hsl(var(--primary));
+  white-space: nowrap;
+  vertical-align: bottom;
+  animation:
+    typing 1s steps(var(--chars)) 0.5s backwards,
+    caret 0.9s step-end infinite;
+}
+
+/* --- buttons --- */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: color 0.15s, background-color 0.15s, border-color 0.15s, transform 0.2s, box-shadow 0.2s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn-primary:hover { box-shadow: 0 22px 50px -16px hsl(191 85% 32% / 0.5); }
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent, rgb(255 255 255 / 0.35), transparent);
+  transform: skewX(-20deg);
+}
+.btn-primary:hover::after { left: 130%; transition: left 0.7s ease; }
+.btn svg { transition: transform 0.25s; }
+.btn:hover svg { transform: scale(1.15) rotate(-8deg); }
+
+/* --- section dividers --- */
+.line-accent {
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    hsl(var(--primary) / 0.4),
+    #06b6d4,
+    hsl(var(--primary) / 0.4),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 8s linear infinite;
+}
+
+/* --- cards --- */
+.card {
+  position: relative;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: hsl(var(--primary) / 0.3);
+  box-shadow: var(--glow-primary);
+}
+/* Pointer-following highlight; --mx / --my are set from main.js. */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), hsl(var(--primary) / 0.09), transparent 65%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.card:hover::before { opacity: 1; }
+.card > * { position: relative; }
+
+.icon-box { transition: transform 0.3s, background-color 0.3s; }
+.card:hover .icon-box {
+  transform: scale(1.1) rotate(-6deg);
+  background-color: hsl(var(--primary) / 0.16);
+}
+
+/* Tags pop in one after another once their card is revealed. */
+.reveal.is-visible .pop { animation: pop 0.35s ease-out calc(var(--d, 0s) + 0.25s + var(--i, 0) * 0.04s) backwards; }
+.tag, .chip { transition: color 0.15s, background-color 0.15s, transform 0.15s, border-color 0.15s; }
+.tag:hover, .chip:hover { transform: translateY(-2px); }
+.tag:hover { border-color: hsl(var(--primary) / 0.4); color: hsl(var(--primary)); }
+.tag-link { transition: background-color 0.15s, transform 0.15s; }
+.tag-link:hover { transform: translateY(-2px); }
+
+/* --- GitHub panel --- */
+.gh-repo { transition: background-color 0.15s, padding-left 0.2s; }
+.gh-repo:hover { padding-left: 1.375rem; }
+.gh-footer a svg, .gh-profile-stats > svg { transition: transform 0.2s; }
+.gh-footer a:hover svg { transform: translateX(3px); }
+.gh-profile:hover .gh-profile-stats > svg { transform: translate(2px, -2px); }
+.gh-search input { transition: border-color 0.2s, box-shadow 0.2s; }
+.gh-search input:focus { box-shadow: 0 0 0 3px hsl(var(--primary) / 0.12); }
+
+/* --- language switch: quick cross-fade instead of the first-load entrance --- */
+.swap section { animation: fade-in 0.35s ease; }
+.no-anim .typewriter { animation: caret 0.9s step-end infinite; }
+.no-anim .pop { animation: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg img,
+  .avatar-ring,
+  .avatar-ring::before,
+  .avatar-ring img,
+  .shimmer,
+  .line-accent,
+  .typewriter,
+  .swap section,
+  .reveal.is-visible .pop { animation: none; }
+  .typewriter { border-right-color: transparent; }
+  .card:hover,
+  .btn:hover,
+  .tag:hover,
+  .chip:hover,
+  .tag-link:hover,
+  .nav-actions > a:hover { transform: none; }
+  .card:hover .icon-box,
+  .btn:hover svg { transform: none; }
+  .gh-repo:hover { padding-left: 1rem; }
 }
