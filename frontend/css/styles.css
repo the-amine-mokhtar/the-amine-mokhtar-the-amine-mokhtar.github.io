@@ -1354,3 +1354,51 @@ body { transition: background-color 0.35s, color 0.35s; }
 @media (prefers-reduced-motion: reduce) {
   .term-chip:hover { transform: none; }
 }
+
+/* ==========================================================================
+   Clouds over the profile photo: they drift across it and clear on hover/tap
+   ========================================================================== */
+
+@keyframes puff-drift {
+  from { transform: translateX(calc(var(--dir, 1) * -16%)); }
+  to { transform: translateX(calc(var(--dir, 1) * 16%)); }
+}
+
+.avatar-ring { cursor: pointer; }
+.avatar-clouds {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.6s ease, transform 0.8s ease, filter 0.6s ease;
+}
+.puff {
+  position: absolute;
+  aspect-ratio: 2.6 / 1;
+  opacity: var(--o);
+  filter: blur(5px);
+  background:
+    radial-gradient(ellipse 30% 46% at 27% 64%, hsl(var(--cloud)) 30%, transparent 72%),
+    radial-gradient(ellipse 26% 58% at 46% 44%, hsl(var(--cloud)) 30%, transparent 72%),
+    radial-gradient(ellipse 28% 46% at 68% 60%, hsl(var(--cloud)) 30%, transparent 72%),
+    radial-gradient(ellipse 46% 30% at 50% 76%, hsl(var(--cloud)) 30%, transparent 75%);
+  animation: puff-drift var(--t) ease-in-out infinite alternate;
+}
+[data-theme="dark"] .puff { opacity: calc(var(--o) * 0.6); }
+
+/* Hovering (or tapping) the photo blows the clouds away, including the big ones passing in front. */
+.avatar-ring:hover .avatar-clouds,
+.avatar-ring.is-clear .avatar-clouds {
+  opacity: 0;
+  transform: scale(1.5);
+  filter: blur(6px);
+}
+.clouds-front { transition: opacity 0.6s ease; }
+.hero:has(.avatar-ring:hover) .clouds-front,
+.hero:has(.avatar-ring.is-clear) .clouds-front { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .puff { animation: none; }
+  .avatar-ring:hover .avatar-clouds,
+  .avatar-ring.is-clear .avatar-clouds { transform: none; }
+}

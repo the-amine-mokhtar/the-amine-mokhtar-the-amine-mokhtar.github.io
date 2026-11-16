@@ -143,6 +143,19 @@ function renderClouds(layer) {
   return `<div class="clouds clouds-${layer}" aria-hidden="true">${clouds}</div>`;
 }
 
+// Small clouds that float across the profile photo and clear away when it is
+// hovered (or tapped). Each puff: top, left, width, seconds per drift, opacity.
+const AVATAR_CLOUDS = `<span class="avatar-clouds" aria-hidden="true">${[
+  ["6%", "-34%", "92%", 9, 0.95],
+  ["38%", "32%", "104%", 12, 0.9],
+  ["62%", "-22%", "84%", 10, 0.85],
+]
+  .map(
+    ([top, left, width, seconds, opacity], i) =>
+      `<i class="puff" style="top:${top};left:${left};width:${width};--t:${seconds}s;--o:${opacity};--dir:${i % 2 ? -1 : 1}"></i>`
+  )
+  .join("")}</span>`;
+
 function renderCvButton() {
   const { profile } = state.content;
   if (!profile.cvUrl) return "";
@@ -163,6 +176,7 @@ function renderHero() {
         <div class="hero-avatar enter enter-scale" style="--d:.15s">
           <span class="avatar-ring">
             <img id="avatar" src="${esc(state.avatarSrc)}" alt="${esc(profile.firstName)} ${esc(profile.lastName)}" width="160" height="160">
+            ${AVATAR_CLOUDS}
           </span>
         </div>
         <p class="hero-greeting enter enter-fade" style="--d:.2s"><span class="typewriter" style="--chars:${h.greeting.length}">${esc(h.greeting)}</span></p>
@@ -723,7 +737,13 @@ app.addEventListener("click", (event) => {
     renderGithubData();
     return;
   }
-  if (event.target.closest('[data-action="toggle-theme"]')) toggleTheme();
+  if (event.target.closest('[data-action="toggle-theme"]')) {
+    toggleTheme();
+    return;
+  }
+  // Touch screens have no hover: a tap on the photo clears (or brings back) its clouds.
+  const avatarRing = event.target.closest(".avatar-ring");
+  if (avatarRing) avatarRing.classList.toggle("is-clear");
 });
 
 app.addEventListener("submit", (event) => {
