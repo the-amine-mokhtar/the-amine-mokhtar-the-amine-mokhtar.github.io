@@ -810,7 +810,8 @@ export function createTerminal({ content, setTheme, setLang }) {
   async function execute(commandLine) {
     const tokens = (commandLine.match(/"[^"]*"|'[^']*'|\S+/g) || []).map((tok) => tok.replace(/^(["'])(.*)\1$/, "$2"));
     if (!tokens.length) return;
-    const handler = Object.hasOwn(COMMANDS, tokens[0]) ? COMMANDS[tokens[0]] : null;
+    const name = tokens[0].toLowerCase();
+    const handler = Object.hasOwn(COMMANDS, name) ? COMMANDS[name] : null;
     if (!handler) {
       text(`bash: ${tokens[0]}: command not found. Type help to see what works here.`);
       return;
