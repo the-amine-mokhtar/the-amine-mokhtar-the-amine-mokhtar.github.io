@@ -10,7 +10,11 @@
       "en": "Cloud Engineering Student | Building Full-Stack Applications, Cloud Platforms & DevOps Pipelines",
       "fr": "Étudiant en Cloud Engineering | Conception d'applications full-stack, de plateformes cloud et de pipelines DevOps"
     },
-    "cvUrl": "assets/cv-amine-mokhtar.pdf"
+    "cvUrl": "assets/cv-amine-mokhtar.pdf",
+    "bio": {
+      "en": "Cloud & Infrastructure Engineering student at ESPRIT. Looking for a final-year internship to apply my skills in containerization, orchestration, DevOps, and full-stack development. Active in student organizations including IEEE and Lions Club, contributing to collaborative projects and extracurricular activities.",
+      "fr": "Étudiant en ingénierie Cloud & Infrastructure à ESPRIT. À la recherche d'un stage de fin d'études pour mettre en pratique mes compétences en conteneurisation, orchestration, DevOps et développement full-stack. Actif dans des organisations étudiantes, dont IEEE et le Lions Club, où je contribue à des projets collaboratifs et à des activités extrascolaires."
+    }
   },
   "projects": [
     {

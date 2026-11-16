@@ -17,7 +17,7 @@
 const DAY = 864e5;
 const SPARK = "▁▂▃▄▅▆▇█";
 const FILES = ["README.md", "about.txt", "skills.yaml", "projects.md", "certificates.txt", "contact.txt", ".secrets"];
-const CHIPS = ["help", "neofetch", "kubectl get pods", "docker ps", "grafana", "stress", "chaos node-down", "pipeline"];
+const CHIPS = ["help", "who are you", "neofetch", "kubectl get pods", "docker ps", "grafana", "stress", "chaos node-down", "pipeline"];
 
 class Cancelled extends Error {}
 
@@ -579,9 +579,18 @@ export function createTerminal({ content, setTheme, setLang }) {
     dim(`${content.projects.length} featured projects · ${(content.certificates || []).length} certificates · type projects, certs or skills`);
   }
 
+  // "who are you": the longer bio from content.json (profile.bio), in the site's current language.
+  function whoAreYou() {
+    const lang = document.documentElement.lang === "fr" ? "fr" : "en";
+    const bio = profile.bio && (profile.bio[lang] || profile.bio.en);
+    text([{ t: `${profile.firstName} ${profile.lastName}`, c: "t-b" }]);
+    text(bio || en(profile.tagline));
+    dim("more: skills · projects · certs · contact · cv");
+  }
+
   function help() {
     const groups = [
-      ["PROFILE", "whoami · about · skills · projects · certs · contact · cv · neofetch"],
+      ["PROFILE", "who are you · whoami · about · skills · projects · certs · contact · cv · neofetch"],
       ["CONTAINERS", "docker ps · docker images · docker stats"],
       ["KUBERNETES", "kubectl get pods|nodes|deploy|svc|hpa · kubectl top pods|nodes · kubectl logs <pod> · kubectl describe pod <pod> · kubectl delete pod <pod> · kubectl scale deployment <name> --replicas=N   (alias: k)"],
       ["OBSERVE", "prometheus · promql up · alerts · grafana · top"],
@@ -604,6 +613,9 @@ export function createTerminal({ content, setTheme, setLang }) {
       dim(`${profile.firstName} ${profile.lastName} · ${en(profile.tagline)}`);
     },
     about: showAbout,
+    whoareyou: whoAreYou,
+    // "who are you" arrives here as the command "who" with the arguments "are you".
+    who: (args) => (/^are\s*you\??$/i.test(args.join(" ")) ? whoAreYou() : line("amine    pts/0    (your browser)")),
     skills: showSkills,
     projects: showProjects,
     certs: showCerts,
@@ -787,7 +799,7 @@ export function createTerminal({ content, setTheme, setLang }) {
   COMMANDS.vi = COMMANDS.vim;
   COMMANDS.k = kubectl;
 
-  const HIDDEN = new Set(["sudo", "rm", "exit", "vim", "nano", "vi", "overload", "k", "pwd", "hostname", "uname", "uptime", "echo"]);
+  const HIDDEN = new Set(["whoareyou", "sudo", "rm", "exit", "vim", "nano", "vi", "overload", "k", "pwd", "hostname", "uname", "uptime", "echo"]);
 
   /* ---------- running commands ---------- */
 
@@ -843,6 +855,7 @@ export function createTerminal({ content, setTheme, setLang }) {
     const pods = cluster.pods.map((p) => p.name);
     const deployments = cluster.deployments.map((d) => d.name);
     if (!first) return Object.keys(COMMANDS).filter((name) => !HIDDEN.has(name));
+    if (first === "who") return second ? (third ? [] : ["you"]) : ["are"];
     if (first === "kubectl") {
       if (!second) return ["get", "top", "describe", "logs", "delete", "scale", "rollout"];
       if (second === "get" && !third) return ["pods", "nodes", "deployments", "services", "hpa", "all"];
