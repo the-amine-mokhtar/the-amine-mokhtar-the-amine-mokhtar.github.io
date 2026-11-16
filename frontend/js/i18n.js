@@ -4,6 +4,7 @@ export const STRINGS = {
   en: {
     nav: {
       projects: "Projects",
+      terminal: "Terminal",
       github: "GitHub",
       skills: "Skills",
       certificates: "Certificates",
@@ -17,6 +18,12 @@ export const STRINGS = {
       titleB: "Projects",
       completed: "Completed",
       inProgress: "In Progress",
+    },
+    terminal: {
+      eyebrow: "PLAYGROUND",
+      titleA: "Cloud",
+      titleB: "Terminal",
+      subtitle: "A simulated shell on a small Kubernetes lab. Type help, or tap a command. Nothing here runs for real.",
     },
     githubSection: {
       eyebrow: "OPEN SOURCE",
@@ -73,6 +80,7 @@ export const STRINGS = {
   fr: {
     nav: {
       projects: "Projets",
+      terminal: "Terminal",
       github: "GitHub",
       skills: "Compétences",
       certificates: "Certificats",
@@ -86,6 +94,12 @@ export const STRINGS = {
       titleB: "phares",
       completed: "Terminé",
       inProgress: "En cours",
+    },
+    terminal: {
+      eyebrow: "BAC À SABLE",
+      titleA: "Terminal",
+      titleB: "cloud",
+      subtitle: "Un shell simulé sur un petit lab Kubernetes. Tapez help ou touchez une commande. Rien ne s'exécute réellement.",
     },
     githubSection: {
       eyebrow: "OPEN SOURCE",

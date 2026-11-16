@@ -2,6 +2,7 @@ import { CONFIG } from "./config.js";
 import { STRINGS } from "./i18n.js";
 import { icon } from "./icons.js";
 import { loadContent, loadGithub } from "./api.js";
+import { createTerminal } from "./terminal.js";
 
 const REPOS_PREVIEW_COUNT = 6;
 const LANGUAGE_COLORS = {
@@ -84,6 +85,7 @@ function renderNav() {
   const n = t().nav;
   const links = [
     ["#projects", n.projects],
+    ["#terminal", n.terminal],
     ["#github", n.github],
     ["#skills", n.skills],
     ["#certificates", n.certificates],
@@ -477,8 +479,43 @@ async function submitContactForm(form) {
   refreshContactForm();
 }
 
+function setLang(lang) {
+  if (lang !== "en" && lang !== "fr") return;
+  if (lang === state.lang) return;
+  state.lang = lang;
+  store("lang", lang);
+  render();
+}
+
+function renderTerminalSection() {
+  const s = t().terminal;
+  return `
+    <section id="terminal" class="section">
+      <div class="container container-md">
+        ${sectionHead(s.eyebrow, s.titleA, s.titleB, `<p class="section-subtitle">${esc(s.subtitle)}</p>`, "mb-12")}
+        <div class="reveal" id="terminal-mount"></div>
+      </div>
+    </section>`;
+}
+
+// The terminal is created once and re-attached after every render, so its
+// history and the state of the simulated cluster survive a language switch.
+let terminal = null;
+
+function mountTerminal() {
+  const mount = document.getElementById("terminal-mount");
+  if (!mount) return;
+  if (!terminal) terminal = createTerminal({ content: state.content, setTheme, setLang });
+  mount.replaceChildren(terminal.element);
+  terminal.scrollToEnd();
+}
+
 function toggleTheme() {
-  state.theme = state.theme === "dark" ? "light" : "dark";
+  setTheme(state.theme === "dark" ? "light" : "dark");
+}
+
+function setTheme(theme) {
+  state.theme = theme === "dark" ? "dark" : "light";
   document.documentElement.dataset.theme = state.theme;
   store("theme", state.theme);
   const button = app.querySelector(".theme-toggle");
@@ -588,6 +625,8 @@ function render({ animate = false } = {}) {
       <div class="line-accent"></div>
       ${renderProjects()}
       <div class="line-accent"></div>
+      ${renderTerminalSection()}
+      <div class="line-accent"></div>
       ${renderGithubSection()}
       <div class="line-accent"></div>
       ${renderSkills()}
@@ -596,6 +635,7 @@ function render({ animate = false } = {}) {
       ${renderContact()}
     </div>`;
   bindImageFallbacks();
+  mountTerminal();
   renderGithubData({ animate });
   if (animate) observeReveals(app);
   setupScrollSpy();
@@ -675,11 +715,7 @@ app.addEventListener("click", (event) => {
   const langButton = event.target.closest("[data-lang]");
   if (langButton) {
     const lang = langButton.dataset.lang;
-    if (lang !== state.lang) {
-      state.lang = lang;
-      store("lang", lang);
-      render();
-    }
+    setLang(lang);
     return;
   }
   if (event.target.closest('[data-action="toggle-repos"]')) {

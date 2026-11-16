@@ -16,6 +16,7 @@ Design decisions and trade-offs are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.
 │   ├── index.html
 │   ├── css/styles.css
 │   ├── js/main.js             renders every section, language switch, repo search
+│   ├── js/terminal.js         the interactive (simulated) cloud terminal
 │   ├── js/i18n.js             interface text, EN + FR
 │   ├── js/api.js              loads content and GitHub data (backend or static)
 │   ├── js/config.js           switch between static mode and backend mode
@@ -177,6 +178,18 @@ email app with the message filled in. Set `contactEndpoint: ""` to always do tha
 <https://www.goatcounter.com/signup>, pick a code (for example `amine-mokhtar`), and put it
 in `config.js`. GoatCounter uses no cookies; visitors with Do Not Track enabled and visits
 on localhost are not counted. Your dashboard is at `https://<code>.goatcounter.com`.
+
+**Terminal.** The "Cloud Terminal" section is a simulation that runs entirely in the
+browser: no command is really executed. Its commands are the `COMMANDS` table in
+`frontend/js/terminal.js`, and the fake cluster (nodes, deployments) is `makeCluster()` at
+the top of that file. To add a command, add an entry to `COMMANDS`:
+
+```js
+hello: (args) => line(`Hello ${args[0] || "world"}`),
+```
+
+Use `await sleep(ms)` between lines to animate, `printTable([...rows])` for aligned columns,
+and add the name to `CHIPS` if you want a clickable shortcut under the terminal.
 
 **Motion.** The drifting clouds are defined by the `CLOUDS` list in `frontend/js/main.js`
 (position, size, speed, opacity). All animation is disabled for visitors whose system asks

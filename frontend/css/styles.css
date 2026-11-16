@@ -1237,3 +1237,120 @@ body { transition: background-color 0.35s, color 0.35s; }
   .form-status:not(:empty) { animation: none; }
   .theme-toggle:hover { transform: none; }
 }
+
+/* ==========================================================================
+   Interactive terminal (always dark, in both themes)
+   ========================================================================== */
+
+.term {
+  overflow: hidden;
+  border: 1px solid #1e2a40;
+  border-radius: var(--radius-xl);
+  background-color: #0b1220;
+  color: #d7e0ee;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  text-align: left;
+  box-shadow: 0 30px 60px -30px hsl(220 60% 10% / 0.65);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.term:focus-within {
+  border-color: hsl(var(--primary) / 0.6);
+  box-shadow: 0 30px 60px -30px hsl(220 60% 10% / 0.65), 0 0 0 3px hsl(var(--primary) / 0.12);
+}
+
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid #1e2a40;
+  background-color: #111a2c;
+}
+.term-dot { width: 0.75rem; height: 0.75rem; border-radius: 9999px; }
+.term-dot-r { background-color: #f87171; }
+.term-dot-y { background-color: #fbbf24; }
+.term-dot-g { background-color: #34d399; }
+.term-title {
+  flex: 1;
+  padding-right: 3.25rem;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  color: #8b9bb4;
+}
+
+.term-body {
+  height: 24rem;
+  padding: 0.875rem 1rem;
+  overflow: auto;
+  cursor: text;
+  scrollbar-color: #2a3954 transparent;
+  scrollbar-width: thin;
+}
+.term-line { min-height: 1.55em; white-space: pre; }
+.term-line.wrap { white-space: pre-wrap; overflow-wrap: anywhere; }
+.term-line.hang { padding-left: 12ch; text-indent: -12ch; }
+
+.term-input-row { display: flex; align-items: baseline; gap: 1ch; }
+.term.is-busy .term-prompt { visibility: hidden; }
+.term-prompt { white-space: nowrap; }
+.term-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  caret-color: #22d3ee;
+  outline: none;
+}
+.term-input:focus-visible { outline: none; }
+
+.t-g { color: #34d399; }
+.t-y { color: #fbbf24; }
+.t-r { color: #f87171; }
+.t-c { color: #22d3ee; }
+.t-m { color: #c084fc; }
+.t-d { color: #7c8aa3; }
+.t-b { font-weight: 700; color: #f4f7fb; }
+.t-link { color: #7dd3fc; text-decoration: underline; text-underline-offset: 2px; }
+.t-link:hover { color: #bae6fd; }
+
+.term-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #1e2a40;
+  background-color: #0e1626;
+}
+.term-chip {
+  padding: 0.25rem 0.625rem;
+  border: 1px solid #24324b;
+  border-radius: 0.5rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: #9fb0c9;
+  transition: color 0.15s, border-color 0.15s, transform 0.15s;
+}
+.term-chip:hover {
+  border-color: #22d3ee88;
+  color: #22d3ee;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 639px) {
+  .term-body { height: 21rem; padding: 0.75rem; }
+  .term { font-size: 0.75rem; }
+  /* 16px stops iOS from zooming the page when the input is focused. */
+  .term-input { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .term-chip:hover { transform: none; }
+}
